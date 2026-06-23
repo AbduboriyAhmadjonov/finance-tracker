@@ -1,46 +1,23 @@
-import sqlite3  # Sqlite kutibxonasini import qilamiz
+import db  # db.py faylidagi funksiyalarni import qilamiz
 
 
-def get_connection():
-    # connection yaratamiz va finance.db faylini yaratamiz
-    connection = sqlite3.connect("finance.db")
-    return connection
+# Jadval mavjudligiga ishonch hosil qilamiz
+db.create_table()
 
+# Bitta namuna transaction qo'shamiz (sanani YYYY-MM-DD ko'rinishida yozamiz)
+db.add_transaction(50000000, "Otam pul tashab berdi", "Kirim", "2026-06-21")
 
-def create_table():
-    conn = get_connection()  # connectionni olamiz
-    # SQL Query yordamida transactions jadvalini yaratamiz, agar mavjud bo'lmasa
-    conn.execute("""
-        CREATE TABLE IF NOT EXISTS transactions (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            amount REAL NOT NULL,
-            description TEXT,
-            category TEXT,
-            date TEXT NOT NULL
-        );
-    """)
-    conn.commit()  # o'zgarishlarni saqlaymiz
-    conn.close()  # connectionni yopamiz
+# Hammasini o'qib, chiroyli jadval ko'rinishida chiqaramiz (Mashq 2)
+transactions = db.get_all_transactions()
+print("ID  | Amount     | Category     | Date       | Description")
+print("-" * 60)
+for row in transactions:
+    print(f"#{row[0]:<3} | {row[1]:<10} | {row[3]:<12} | {row[4]:<10} | {row[2]}")
 
+# Jami nechta transaction bor? (Mashq 1)
+print("\nJami transactionlar soni:", db.count_transactions())
 
-def get_transactions():
-    conn = get_connection()
-    cursor = conn.execute("SELECT * FROM transactions")
-    rows = cursor.fetchall()   # actually pull the data into memory
-    conn.close()
-    return rows
-
-
-def add_transaction(amount, description, category, date):
-    conn = get_connection()
-    conn.execute("INSERT INTO transactions (amount, description, category, date) VALUES (?, ?, ?, ?)",
-                 (amount, description, category, date))
-    conn.commit()
-    conn.close()
-
-
-create_table()
-add_transaction(amount=50000000, description="Otam pul tashab berdi",
-                category="Kirim", date="21.06.2026")
-transaction = get_transactions()
-print("Here is the latest transaction: ", transaction)
+# Faqat 'Kirim' kategoriyasidagi transactionlar (Mashq 3)
+print("\nFaqat Kirim kategoriyasi:")
+for row in db.get_by_category("Kirim"):
+    print(row)
