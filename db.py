@@ -42,13 +42,12 @@ def get_all_transactions():
     return rows
 
 
-# --- Dars 2 mashqlari ---
-
 def count_transactions():
     # jadvalda nechta qator (transaction) borligini qaytaradi
     conn = get_connection()
     cursor = conn.execute("SELECT COUNT(*) FROM transactions")
-    count = cursor.fetchone()[0]  # fetchone bitta qator qaytaradi, masalan (5,)
+    # fetchone bitta qator qaytaradi, masalan (5,)
+    count = cursor.fetchone()[0]
     conn.close()
     return count
 
@@ -56,7 +55,8 @@ def count_transactions():
 def get_by_category(category):
     # faqat berilgan kategoriyadagi transactionlarni qaytaradi
     conn = get_connection()
-    cursor = conn.execute("SELECT * FROM transactions WHERE category = ?", (category,))
+    cursor = conn.execute(
+        "SELECT * FROM transactions WHERE category = ?", (category,))
     rows = cursor.fetchall()
     conn.close()
     return rows
