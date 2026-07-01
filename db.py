@@ -1,62 +1,25 @@
-import sqlite3  # Sqlite kutibxonasini import qilamiz
+from sqlalchemy import create_engine
+from sqlalchemy.orm import DeclarativeBase, sessionmaker
+
+# 1. The engine: our connection to the database file.
+engine = create_engine("sqlite:///finance.db", echo=False)
 
 
-def get_connection():
-    # connection yaratamiz va finance.db faylini yaratamiz
-    connection = sqlite3.connect("finance.db")
-    return connection
+class Base(DeclarativeBase):
+    pass
 
 
-def create_table():
-    conn = get_connection()  # connectionni olamiz
-    # SQL Query yordamida transactions jadvalini yaratamiz, agar mavjud bo'lmasa
-    conn.execute("""
-        CREATE TABLE IF NOT EXISTS transactions (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            amount REAL NOT NULL,
-            description TEXT,
-            category TEXT,
-            date TEXT NOT NULL
-        );
-    """)
-    conn.commit()  # o'zgarishlarni saqlaymiz
-    conn.close()  # connectionni yopamiz
+# 3. The Session factory: makes "workspaces" for reading/writing.
+SessionLocal = sessionmaker(bind=engine)
+
+# - **Engine** = the database connection. `sqlite:///finance.db` is a database URL ("use SQLite, file finance.db").
+# - **Base** = a parent class. Every table we define inherits from it, and Base remembers them all.
+# - **Session** = your workspace. You open one, add/read objects, commit, close. `SessionLocal` is a factory that makes them.
 
 
-def add_transaction(amount, description, category, date):
-    conn = get_connection()
-    # ? placeholderlar SQL injectiondan himoya qiladi — har doim shulardan foydalanamiz
-    conn.execute(
-        "INSERT INTO transactions (amount, description, category, date) VALUES (?, ?, ?, ?)",
-        (amount, description, category, date),
-    )
-    conn.commit()
-    conn.close()
+# Next: temporarily use `create_engine("sqlite:///finance.db", echo=True)`. Now SQLAlchemy prints the real SQL it runs. Showing "it's still SQL underneath". Turn it off later.
 
 
-def get_all_transactions():
-    conn = get_connection()
-    cursor = conn.execute("SELECT * FROM transactions")
-    rows = cursor.fetchall()   # ma'lumotlarni xotiraga olib kelamiz
-    conn.close()
-    return rows
-
-
-def count_transactions():
-    # jadvalda nechta qator (transaction) borligini qaytaradi
-    conn = get_connection()
-    cursor = conn.execute("SELECT COUNT(*) FROM transactions")
-    # fetchone bitta qator qaytaradi, masalan (5,)
-    count = cursor.fetchone()[0]
-    conn.close()
-    return count
-
-
-def get_by_category(category):
-    # faqat berilgan kategoriyadagi transactionlarni qaytaradi
-    conn = get_connection()
-    cursor = conn.execute(
-        "SELECT * FROM transactions WHERE category = ?", (category,))
-    rows = cursor.fetchall()
-    conn.close()
-    return rows
+# Creates tables in the database if they don't exist yet
+def create_tables():
+    Base.metadata.create_all(engine)
