@@ -1,8 +1,6 @@
 # db.py faylidagi funksiyalarni import qilamiz
-from sqlalchemy import Date, select
-from model import Transaction
 from db import SessionLocal, create_tables
-
+from funcitons import add_transaction, list_transactions, delete_tranaction, total_amount, search_transacions, list_by_category
 
 def main():
     # Create tables if they don't exist
@@ -24,22 +22,22 @@ def main():
             break
         elif choice == "1":
             add_transaction()
-            break
+           
         elif choice == "2":
             list_transactions()
-            break
+           
         elif choice == "3":
-            pass
-            break
+            delete_tranaction()
         elif choice == "4":
-            pass
-            break
+            total_amount()
+            
         elif choice == "5":
-            pass
-            break
+            search_transacions()
+
+            
         elif choice == "6":
-            pass
-            break
+            list_by_category()
+            
         else:
             print("You chose:", choice)
 
