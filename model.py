@@ -7,6 +7,6 @@ class Transaction(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     amount: Mapped[float] = mapped_column()
-    category: Mapped[str] = mapped_column()
-    description: Mapped[str] = mapped_column()
+    category: Mapped[str | None] = mapped_column()
+    description: Mapped[str | None] = mapped_column()
     date: Mapped[str] = mapped_column()
