@@ -1,6 +1,9 @@
 # db.py faylidagi funksiyalarni import qilamiz
 from db import SessionLocal, create_tables
-from funcitons import add_transaction, list_transactions, delete_tranaction, total_amount, search_transacions, list_by_category
+from funcitons.transactions import add_transaction, list_transactions, delete_tranaction, total_amount, search_transacions, list_by_category
+
+
+global account_id  # Global variable to store the logged-in account ID
 
 
 def main():
@@ -9,6 +12,10 @@ def main():
 
     while True:
         print("\n=== Finance Tracker ===")
+        print("1. Create Account")
+        print("2. Log In")
+
+        # Ikki qism
         print("1. Add transaction")
         print("2. List transactions")
         print("3. Delete Transaction")
