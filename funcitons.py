@@ -1,7 +1,7 @@
 from datetime import date
 from sqlalchemy import select
 from db import SessionLocal
-from model import Transaction
+from models import Transaction
 
 
 def add_transaction() -> None:
