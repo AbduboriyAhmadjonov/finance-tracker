@@ -2,6 +2,7 @@
 from db import SessionLocal, create_tables
 from funcitons import add_transaction, list_transactions, delete_tranaction, total_amount, search_transacions, list_by_category
 
+
 def main():
     # Create tables if they don't exist
     create_tables()
@@ -22,25 +23,23 @@ def main():
             break
         elif choice == "1":
             add_transaction()
-           
+
         elif choice == "2":
             list_transactions()
-           
+
         elif choice == "3":
             delete_tranaction()
         elif choice == "4":
             total_amount()
-            
+
         elif choice == "5":
             search_transacions()
 
-            
         elif choice == "6":
             list_by_category()
-            
+
         else:
             print("You chose:", choice)
-
 
 
 if __name__ == "__main__":

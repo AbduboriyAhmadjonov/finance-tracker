@@ -4,6 +4,7 @@ A roadmap of features to build, staged by difficulty. The course adds one small
 thing at a time, so work top to bottom — each item teaches one new idea.
 
 ## 🟢 Core (the foundation)
+
 The must-haves that make it a real tracker.
 
 - [ ] **Add a transaction** — amount, type (income/expense), category, date, note
@@ -14,6 +15,7 @@ The must-haves that make it a real tracker.
 - [ ] **Search / filter** — "show only Food", "show only this month"
 
 ## 🟡 Reports & insight
+
 What makes a finance app actually useful.
 
 - [ ] **Monthly summary** — total spent, total earned, net for a given month
@@ -35,7 +37,7 @@ What makes a finance app actually useful.
 ## 🔵 Advanced / portfolio polish
 
 - [ ] **Charts** — pie chart of spending with matplotlib
-- [ ] **Command-line menu** — interactive app (1) Add  2) Report  3) Quit)
+- [ ] **Command-line menu** — interactive app (1) Add 2) Report 3) Quit)
 - [ ] **Web version** — expose it with Flask/FastAPI, a simple webpage
 - [ ] **Reminders** — "you haven't logged anything in 3 days"
 - [ ] **Insights / alerts** — "unusual spending on Transport this week"
@@ -43,6 +45,7 @@ What makes a finance app actually useful.
 ---
 
 ### Suggested order for now
+
 Start with the 🟢 Core items in this order — each builds on the last:
 
 `add transaction → list transactions → balance → categories → edit/delete → filter`

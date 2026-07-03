@@ -10,20 +10,20 @@
 Pul **kirgani** (income) va **chiqqanini** (expense) nazorat qiluvchi dastur.
 Foydalanuvchi o'z pulini kuzatadi va **haftalik / oylik** sarflar tarixini ko'radi.
 
-> Asosiy savol: *"Mening pulim qayerga ketyapti?"*
+> Asosiy savol: _"Mening pulim qayerga ketyapti?"_
 
 ---
 
 ## 🧩 Asosiy imkoniyatlar (Features)
 
-| # | Imkoniyat | Tavsif |
-|---|-----------|--------|
-| 0 | Akkount yaratish | Foydalanuvchi nomi bilan yangi akkount ochish |
-| 1 | Pul kiritish (income) | Balansga pul qo'shish (masalan: oylik, sovg'a) |
-| 2 | Pul ishlatish (expense) | Sarflangan pulni yozib qo'yish (masalan: ovqat, transport) |
-| 3 | Balansni ko'rish | Hozirgi qoldiq = jami kirim − jami chiqim |
-| 4 | Tarix (history) | Barcha kirim/chiqim yozuvlari ro'yxati |
-| 5 | Hisobot (report) | Haftalik yoki oylik sarflar yig'indisi |
+| #   | Imkoniyat               | Tavsif                                                     |
+| --- | ----------------------- | ---------------------------------------------------------- |
+| 0   | Akkount yaratish        | Foydalanuvchi nomi bilan yangi akkount ochish              |
+| 1   | Pul kiritish (income)   | Balansga pul qo'shish (masalan: oylik, sovg'a)             |
+| 2   | Pul ishlatish (expense) | Sarflangan pulni yozib qo'yish (masalan: ovqat, transport) |
+| 3   | Balansni ko'rish        | Hozirgi qoldiq = jami kirim − jami chiqim                  |
+| 4   | Tarix (history)         | Barcha kirim/chiqim yozuvlari ro'yxati                     |
+| 5   | Hisobot (report)        | Haftalik yoki oylik sarflar yig'indisi                     |
 
 ---
 
@@ -32,22 +32,24 @@ Foydalanuvchi o'z pulini kuzatadi va **haftalik / oylik** sarflar tarixini ko'ra
 Bugungi dars markazi: **birinchi baza** bilan ishlash (SQLite).
 
 ### Jadval: `accounts`
-| Ustun | Tip | Izoh |
-|-------|-----|------|
-| id | INTEGER | Primary key |
-| name | TEXT | Akkount nomi (unique) |
-| created | TEXT | Yaratilgan sana |
+
+| Ustun   | Tip     | Izoh                  |
+| ------- | ------- | --------------------- |
+| id      | INTEGER | Primary key           |
+| name    | TEXT    | Akkount nomi (unique) |
+| created | TEXT    | Yaratilgan sana       |
 
 ### Jadval: `transactions`
-| Ustun | Tip | Izoh |
-|-------|-----|------|
-| id | INTEGER | Primary key |
+
+| Ustun      | Tip     | Izoh                                   |
+| ---------- | ------- | -------------------------------------- |
+| id         | INTEGER | Primary key                            |
 | account_id | INTEGER | Qaysi akkountga tegishli (foreign key) |
-| type | TEXT | `'income'` yoki `'expense'` |
-| amount | REAL | Pul miqdori (musbat son) |
-| category | TEXT | Toifa: ovqat, transport, oylik... |
-| note | TEXT | Qo'shimcha izoh (ixtiyoriy) |
-| created | TEXT | Yozuv sanasi |
+| type       | TEXT    | `'income'` yoki `'expense'`            |
+| amount     | REAL    | Pul miqdori (musbat son)               |
+| category   | TEXT    | Toifa: ovqat, transport, oylik...      |
+| note       | TEXT    | Qo'shimcha izoh (ixtiyoriy)            |
+| created    | TEXT    | Yozuv sanasi                           |
 
 **Balans formulasi:** `balance = SUM(income) − SUM(expense)`
 
