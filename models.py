@@ -6,6 +6,7 @@ from db import Base
 class Accounts(Base):
     __tablename__ = "accounts"
 
+    email: Mapped[str] = mapped_column(unique=True)
     id: Mapped[int] = mapped_column(primary_key=True)
     password: Mapped[str] = mapped_column()
     first_name: Mapped[str] = mapped_column()

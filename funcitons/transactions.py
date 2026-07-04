@@ -4,7 +4,7 @@ from db import SessionLocal
 from models import Transaction
 
 
-def add_transaction() -> None:
+def add_transaction(account_id: int) -> None:
     amount = float(input("Enter amount: "))
     description = input("Enter description (optional): ")
     category = input("Enter category (optional): ")
@@ -15,7 +15,8 @@ def add_transaction() -> None:
         amount=amount,
         category=category,
         description=description,
-        date=today
+        date=today,
+        account_id=account_id
     )
 
     with SessionLocal() as session:
@@ -25,10 +26,10 @@ def add_transaction() -> None:
     print("Transaction saved")
 
 
-def list_transactions() -> None:
+def list_transactions(account_id: int) -> None:
     with SessionLocal() as session:
         transactions = session.scalars(
-            select(Transaction)
+            select(Transaction).where(Transaction.account_id == account_id)
         ).all()
     if not transactions:
         return print("You don't have any transactions")
@@ -46,13 +47,13 @@ def list_transactions() -> None:
         )
 
 
-def delete_tranaction() -> None:
+def delete_tranaction(account_id: int) -> None:
     transaction_id = int(input("Enter transaction ID to delete: "))
 
     with SessionLocal() as session:
         transaction = session.get(Transaction, transaction_id)
 
-        if transaction is None:
+        if transaction is None or transaction.account_id != account_id:
             print("Transaction not found ")
             return
         session.delete(transaction)
@@ -61,10 +62,10 @@ def delete_tranaction() -> None:
         print("Transaction deleted")
 
 
-def total_amount() -> None:
+def total_amount(account_id: int) -> None:
     with SessionLocal() as session:
         transactions = session.scalars(
-            select(Transaction)
+            select(Transaction).where(Transaction.account_id == account_id)
         ).all()
         if not transactions:
             print("You don't have any transactions")
@@ -74,12 +75,13 @@ def total_amount() -> None:
         print(f"Total: {total}")
 
 
-def search_transacions() -> None:
+def search_transacions(account_id: int) -> None:
     keyword = input("Search: ")
 
     with SessionLocal() as session:
         transactions = session.scalars(
             select(Transaction).where(
+                Transaction.account_id == account_id,
                 Transaction.description.contains(keyword))
         ).all()
 
@@ -100,11 +102,14 @@ def search_transacions() -> None:
             )
 
 
-def list_by_category() -> None:
+def list_by_category(account_id: int) -> None:
     category = input("Enter category: ")
     with SessionLocal() as sesson:
         transactions = sesson.scalars(
-            select(Transaction).where(Transaction.category == category)
+            select(Transaction).where(
+                Transaction.account_id == account_id,
+                Transaction.category == category
+            )
         ).all()
 
         if not transactions:

@@ -3,19 +3,19 @@ from sqlalchemy import select
 from db import SessionLocal
 from models import Accounts
 
-from main import account_id  # Import the global variable from main.py
+
 
 
 def create_account() -> Accounts:
     email = input("Enter your email: ")
-    password = input("Enter your password: ")
     first_name = input("Enter your first name: ")
     last_name = input("Enter your last name: ")
+    password = input("Enter your password: ")
     second_password = input("Confirm your password: ")
 
     if password != second_password:
         print("Passwords do not match. Please try again.")
-        return create_account()
+        return None
 
     with SessionLocal() as session:
         new_account = Accounts(
@@ -27,6 +27,7 @@ def create_account() -> Accounts:
         )
         session.add(new_account)
         session.commit()
+        session.refresh(new_account) 
         print(f"Account created successfully for {first_name} {last_name}.")
         return new_account
 
@@ -48,12 +49,8 @@ def log_in() -> Accounts | None:
             return None
 
         print(f"Welcome, {account.first_name} {account.last_name}!")
-        global account_id
-        account_id = account.id  # Set the global variable to the logged-in account's ID
         return account
 
 
 def log_out() -> None:
-    global account_id
-    account_id = None  # Clear the global variable
     print("You have been logged out.")
