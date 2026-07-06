@@ -4,14 +4,15 @@ from db import SessionLocal
 from models import Accounts
 
 
-
-
 def create_account() -> Accounts:
     email = input("Enter your email: ")
     first_name = input("Enter your first name: ")
     last_name = input("Enter your last name: ")
     password = input("Enter your password: ")
     second_password = input("Confirm your password: ")
+    if not email or "@" not in email:
+        print("Invalid email")
+        return None
 
     if password != second_password:
         print("Passwords do not match. Please try again.")
@@ -23,11 +24,11 @@ def create_account() -> Accounts:
             password=password,
             first_name=first_name,
             last_name=last_name,
-            date=str(date.today())
+            date=str(date.today()),
         )
         session.add(new_account)
         session.commit()
-        session.refresh(new_account) 
+        session.refresh(new_account)
         print(f"Account created successfully for {first_name} {last_name}.")
         return new_account
 
@@ -39,8 +40,7 @@ def log_in() -> Accounts | None:
     with SessionLocal() as session:
         account = session.scalars(
             select(Accounts).where(
-                Accounts.email == email,
-                Accounts.password == password
+                Accounts.email == email, Accounts.password == password
             )
         ).first()
 

@@ -1,11 +1,18 @@
 from datetime import date
-from sqlalchemy import select
+from sqlalchemy import func, select
 from db import SessionLocal
 from models import Transaction
 
 
 def add_transaction(account_id: int) -> None:
-    amount = float(input("Enter amount: "))
+    try:
+        amount = float(input("Enter amount: "))
+    except ValueError:
+        print("Please enter a valid number")
+        return
+    if amount <= 0:
+        print("Amount must be positive.")
+        return
     description = input("Enter description (optional): ")
     category = input("Enter category (optional): ")
     # <- UnboundlocolError berar edi agaar date = date.today().isoformat() buganda chuni locol uzgaruvchi deb uylaydi python buni
@@ -16,7 +23,7 @@ def add_transaction(account_id: int) -> None:
         category=category,
         description=description,
         date=today,
-        account_id=account_id
+        account_id=account_id,
     )
 
     with SessionLocal() as session:
@@ -64,15 +71,17 @@ def delete_tranaction(account_id: int) -> None:
 
 def total_amount(account_id: int) -> None:
     with SessionLocal() as session:
-        transactions = session.scalars(
-            select(Transaction).where(Transaction.account_id == account_id)
-        ).all()
-        if not transactions:
-            print("You don't have any transactions")
+        total = session.scalar(
+            select(func.sum(Transaction.amount)).where(
+                Transaction.account_id == account_id
+            )
+        )
+
+        if total is None:
+            print("No transactions found")
             return
 
-        total = sum(t.amount for t in transactions)
-        print(f"Total: {total}")
+        print(f"Total amount: {total}")
 
 
 def search_transacions(account_id: int) -> None:
@@ -82,7 +91,8 @@ def search_transacions(account_id: int) -> None:
         transactions = session.scalars(
             select(Transaction).where(
                 Transaction.account_id == account_id,
-                Transaction.description.contains(keyword))
+                Transaction.description.contains(keyword),
+            )
         ).all()
 
         if not transactions:
@@ -107,8 +117,7 @@ def list_by_category(account_id: int) -> None:
     with SessionLocal() as sesson:
         transactions = sesson.scalars(
             select(Transaction).where(
-                Transaction.account_id == account_id,
-                Transaction.category == category
+                Transaction.account_id == account_id, Transaction.category == category
             )
         ).all()
 

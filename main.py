@@ -1,9 +1,14 @@
 # db.py faylidagi funksiyalarni import qilamiz
 from db import SessionLocal, create_tables
 from funcitons.accounts import create_account, log_in
-from funcitons.transactions import add_transaction, list_transactions, delete_tranaction, total_amount, search_transacions, list_by_category
-
-
+from funcitons.transactions import (
+    add_transaction,
+    list_transactions,
+    delete_tranaction,
+    total_amount,
+    search_transacions,
+    list_by_category,
+)
 
 
 def main():
@@ -27,10 +32,10 @@ def main():
             elif choice == "2":
                 account = log_in()
             else:
-                print("Unknown choice:", choice )
+                print("Unknown choice:", choice)
 
         else:
-            print(f"\n=== Finance Tracket - {account.first_name} ===" )
+            print(f"\n=== Finance Tracket - {account.first_name} ===")
             print("1. Add transaction")
             print("2. List transactions")
             print("3. Delete Transaction")
@@ -61,9 +66,6 @@ def main():
                 print("You have been logged out.")
             else:
                 print("Unknown choice:", choice)
-
-
-
 
 
 if __name__ == "__main__":
