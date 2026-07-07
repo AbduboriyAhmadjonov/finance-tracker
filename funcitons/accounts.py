@@ -2,6 +2,7 @@ from datetime import date
 from sqlalchemy import select
 from db import SessionLocal
 from models import Accounts
+from auth import hash_password, verify_hash
 
 
 def create_account() -> Accounts:
@@ -19,9 +20,23 @@ def create_account() -> Accounts:
         return None
 
     with SessionLocal() as session:
+        account = session.scalars(
+            select(Accounts).where(
+                Accounts.email == email
+            )
+        ).first()
+
+    if account:
+        print("An account with this email already exists. Please log in.")
+        return None
+
+    # Hash the password and convert to hex
+    hashed_password = hash_password(password).hex()
+
+    with SessionLocal() as session:
         new_account = Accounts(
             email=email,
-            password=password,
+            password=hashed_password,
             first_name=first_name,
             last_name=last_name,
             date=str(date.today()),
@@ -40,11 +55,14 @@ def log_in() -> Accounts | None:
     with SessionLocal() as session:
         account = session.scalars(
             select(Accounts).where(
-                Accounts.email == email, Accounts.password == password
+                Accounts.email == email
             )
         ).first()
 
-        if account is None:
+        print(
+            f"Account found: {account.first_name} {account.last_name}" if account else "No account found with that email.")
+
+        if account is None or not verify_hash(password=password, hash_hex=account.password):
             print("Invalid credentials. Please try again.")
             return None
 
